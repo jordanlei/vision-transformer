@@ -103,15 +103,15 @@ class Runner:
         fig, axs = plt.subplots(2, 1, figsize=(12, 8))
         
         # Plot training and validation metrics
-        axs[0].plot(self.metrics['train_loss'], label='Train Loss')
-        axs[0].plot(self.metrics['val_loss'], label='Validation Loss')
+        axs[0].plot(self.metrics['train_step'], self.metrics['train_loss'], label='Train Loss')
+        axs[0].plot(self.metrics['val_step'], self.metrics['val_loss'], label='Validation Loss')
         axs[0].set_xlabel('Step')
         axs[0].set_ylabel('Loss')
         axs[0].set_title('Training and Validation Loss')
         axs[0].legend()
         
-        axs[1].plot(self.metrics['train_accuracy'], label='Train Accuracy')
-        axs[1].plot(self.metrics['val_accuracy'], label='Validation Accuracy')
+        axs[1].plot(self.metrics['train_step'], self.metrics['train_accuracy'], label='Train Accuracy')
+        axs[1].plot(self.metrics['val_step'], self.metrics['val_accuracy'], label='Validation Accuracy')
         axs[1].set_xlabel('Step')
         axs[1].set_ylabel('Accuracy')
         axs[1].set_title('Training and Validation Accuracy')

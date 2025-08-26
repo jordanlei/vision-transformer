@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from network import FeedForward, CNN
+from network import FeedForward, CNN, VisionTransformer
 from runner import Runner
 import torchvision
 import torchvision.transforms as transforms
@@ -37,13 +37,20 @@ def main():
     test_loader = torch.utils.data.DataLoader(test, batch_size=128, shuffle=True)
     
     
-    model = CNN()
+    model = VisionTransformer(
+        img_size = 32,
+        hidden_size=128,
+        output_size=10,
+        num_heads=8,
+        num_blocks=12
+    )
+
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
     criterion = nn.CrossEntropyLoss()
     model.to(device)
     
     runner = Runner(model, optimizer, criterion, device)
-    runner.train(train_loader, val_loader, epochs=1)
+    runner.train(train_loader, val_loader, epochs=10)
     runner.plot()
 
     test_loss, test_accuracy = runner.test(test_loader)
