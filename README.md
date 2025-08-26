@@ -42,6 +42,14 @@ vision-transformer/
 - Configurable input, hidden, and output sizes
 - ReLU activation function
 
+**Vision Transformer (ViT)**
+- Complete transformer-based architecture for image classification
+- Patch embedding with 4×4 patches (64 patches for 32×32 images)
+- Multi-head self-attention mechanism
+- Learnable CLS token and positional embeddings
+- Configurable number of transformer blocks and attention heads
+- Optimized for CIFAR-10 classification
+
 ### 🚀 Training Framework
 
 **Runner Class**
@@ -116,9 +124,30 @@ This will:
 
 Modify `train.py` to:
 - Change the number of epochs
-- Use different models (CNN or FeedForward)
+- Use different models (CNN, FeedForward, or VisionTransformer)
 - Adjust hyperparameters (learning rate, batch size)
 - Change the validation split ratio
+
+### Using Vision Transformer
+
+To train with the Vision Transformer architecture:
+
+```python
+from network import VisionTransformer
+
+# Create ViT model with custom parameters
+model = VisionTransformer(
+    img_size=32,        # CIFAR-10 image size
+    hidden_size=128,    # Embedding dimension
+    output_size=10,     # Number of classes
+    num_heads=8,        # Number of attention heads
+    num_blocks=6        # Number of transformer blocks
+)
+
+# Use with existing training pipeline
+runner = Runner(model, optimizer, criterion, device)
+runner.train(train_loader, val_loader, epochs=10)
+```
 
 ### Model Architecture
 
@@ -132,6 +161,32 @@ Input: 3x32x32 (RGB image)
 ├── Flatten: 32×8×8 → 2048
 └── Linear(2048→10) → Output
 ```
+
+**Vision Transformer (ViT) Architecture Details:**
+```
+Input: 3x32x32 (RGB image)
+├── Patch Embedding:
+│   ├── Conv2d(3→128, kernel=4x4, stride=4) → 8x8 patches
+│   ├── Flatten patches → 64 patches × 128 dimensions
+│   ├── Add CLS token → 65 patches × 128 dimensions
+│   └── Add positional embeddings
+├── Transformer Blocks (configurable count):
+│   ├── LayerNorm + Multi-Head Attention (configurable heads)
+│   ├── Residual connection
+│   ├── LayerNorm + Feed-Forward Network (GELU activation)
+│   └── Residual connection
+├── Extract CLS token representation
+└── Linear(128→10) → Output
+```
+
+**Key ViT Components:**
+- **Patch Embedding**: Divides 32×32 images into 4×4 patches (64 patches total)
+- **CLS Token**: Learnable classification token prepended to patch sequence
+- **Positional Embeddings**: Learnable positional information for each patch + CLS token
+- **Multi-Head Attention**: Configurable number of attention heads for different feature aspects
+- **Transformer Blocks**: Stack of self-attention and feed-forward layers with residual connections
+- **Layer Normalization**: Stabilizes training and improves convergence
+- **GELU Activation**: Smooth activation function used in modern transformers
 
 ## Performance
 
@@ -155,6 +210,8 @@ The current CNN implementation achieves:
 
 ### ✅ Completed
 - CNN architecture implementation
+- Vision Transformer (ViT) architecture implementation
+- Complete transformer components (attention, positional embeddings, patch embedding)
 - Training framework with metrics tracking
 - CIFAR-10 data pipeline
 - Model saving/loading
@@ -164,16 +221,17 @@ The current CNN implementation achieves:
 
 ### 🔄 In Progress
 - Model performance optimization
-- Additional architectures (Vision Transformer planned)
+- ViT training and evaluation
+- Hyperparameter tuning for transformer models
 
 ### 📋 Planned Features
-- Vision Transformer implementation
 - Advanced data augmentation
 - Learning rate scheduling
 - Early stopping
 - Cross-validation
 - Model ensemble methods
 - Transfer learning support
+- Performance comparison between CNN and ViT
 
 ## Contributing
 
@@ -185,9 +243,12 @@ The current CNN implementation achieves:
 
 ## License
 
+This project is licensed under the MIT License - see below for details:
+
+```
 MIT License
 
-Copyright (c) 2024
+Copyright (c) 2024 Jordan Lei
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -206,6 +267,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+```
 
 ## Acknowledgments
 
