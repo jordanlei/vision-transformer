@@ -106,8 +106,7 @@ This project provides a complete training pipeline for image classification usin
 vision-transformer/
 ├── network.py          # Neural network architectures (CNN, FeedForward, ViT)
 ├── runner.py           # Training orchestration and metrics tracking
-├── train.py            # Main training script (updated for 20 epochs)
-├── setup_cifar.py      # CIFAR-10 dataset setup utilities
+├── train.py            # Main training script with command-line arguments
 ├── utils.py            # Utility functions for GIF generation
 ├── requirements.txt    # Python dependencies
 ├── .gitignore          # Git ignore rules
@@ -115,11 +114,15 @@ vision-transformer/
 │   └── cifar-10-batches-py/  # CIFAR-10 data files
 ├── demos/              # Interactive tutorials and demonstrations
 │   ├── vit_tutorial.ipynb     # Vision Transformer code explanation
-│   └── attention_maps.ipynb   # Attention visualization tutorial
+│   ├── attention_maps.ipynb   # Attention visualization tutorial
+│   └── model_comparison.ipynb # Model performance comparison analysis
 ├── figures/            # Generated plots and visualizations
-│   └── attention_maps.png     # Example attention map visualization
+│   ├── attention_maps.png     # Attention map visualization
+│   ├── model_comparison_bootstrap.png  # Bootstrap analysis results
+│   └── model_comparison_curves.png     # Training curves comparison
 ├── saved/              # Trained model checkpoints
-│   └── VisionTransformer.pt   # Pre-trained ViT model
+│   ├── cnn.pt/.pkl    # CNN model files
+│   └── vit_*.pt/.pkl  # ViT models with various configurations
 ├── animation_vit.gif   # Training progress animation
 └── .venv/              # Virtual environment (excluded from git)
 ```
@@ -170,17 +173,34 @@ vision-transformer/
 
 #### Training a Model
 
-Run the main training script:
+Run the main training script with command-line arguments:
 ```bash
-python train.py
+# Train CNN (default)
+python train.py --model cnn --epochs 20
+
+# Train Vision Transformer with custom parameters
+python train.py --model vit --epochs 20 --hidden_size 64 --num_heads 3 --num_blocks 10 --patch_size 2
+
+# Train MLP/FeedForward network
+python train.py --model mlp --epochs 20
 ```
+
+**Available Arguments:**
+- `--model`: Architecture choice (`cnn`, `vit`, or `mlp`)
+- `--epochs`: Number of training epochs (default: 20)
+- `--lr`: Learning rate (default: 0.0005)
+- `--batch_size`: Batch size (default: 128)
+- `--hidden_size`: Hidden dimension for ViT (default: 64)
+- `--num_heads`: Number of attention heads for ViT (default: 3)
+- `--num_blocks`: Number of transformer blocks for ViT (default: 10)
+- `--patch_size`: Patch size for ViT (default: 2)
 
 This will:
 1. Download CIFAR-10 dataset (if not already present)
-2. Train a Vision Transformer model for 20 epochs
+2. Train the specified model for the given number of epochs
 3. Display training progress with live metrics
 4. Generate training plots and animated GIF
-5. Save the trained model as `VisionTransformer.pt`
+5. Save the trained model with descriptive filename
 6. Report final test performance
 
 #### Interactive Tutorials
@@ -197,11 +217,12 @@ jupyter notebook
 
 #### Custom Training
 
-Modify `train.py` to:
-- Change the number of epochs (currently set to 20)
+Modify `train.py` or use command-line arguments to:
+- Change the number of epochs (default: 20)
 - Use different models (CNN, FeedForward, or VisionTransformer)
 - Adjust hyperparameters (learning rate, batch size, model architecture)
-- Change the validation split ratio
+- Change the validation split ratio (currently 80/20 train/val split)
+- Customize ViT architecture (hidden size, attention heads, transformer blocks, patch size)
 
 #### Using Vision Transformer
 
@@ -213,15 +234,16 @@ from network import VisionTransformer
 # Create ViT model with custom parameters
 model = VisionTransformer(
     img_size=32,        # CIFAR-10 image size
-    hidden_size=64,     # Embedding dimension (updated from 128)
+    hidden_size=64,     # Embedding dimension
     output_size=10,     # Number of classes
-    num_heads=4,        # Number of attention heads (updated from 8)
-    num_blocks=4        # Number of transformer blocks (updated from 6)
+    num_heads=3,        # Number of attention heads
+    num_blocks=10,      # Number of transformer blocks
+    patch_size=2        # Patch size for image division
 )
 
 # Use with existing training pipeline
 runner = Runner(model, optimizer, criterion, device)
-runner.train(train_loader, val_loader, epochs=20)  # Updated to 20 epochs
+runner.train(train_loader, val_loader, epochs=20)
 ```
 
 #### Attention Visualization
@@ -259,12 +281,12 @@ Input: 3x32x32 (RGB image)
 ```
 Input: 3x32x32 (RGB image)
 ├── Patch Embedding:
-│   ├── Conv2d(3→64, kernel=4x4, stride=4) → 8x8 patches
-│   ├── Flatten patches → 64 patches × 64 dimensions
-│   ├── Add CLS token → 65 patches × 64 dimensions
+│   ├── Conv2d(3→64, kernel=2x2, stride=2) → 16x16 patches (256 patches total)
+│   ├── Flatten patches → 256 patches × 64 dimensions
+│   ├── Add CLS token → 257 patches × 64 dimensions
 │   └── Add positional embeddings
-├── Transformer Blocks (4 blocks):
-│   ├── LayerNorm + Multi-Head Attention (4 heads)
+├── Transformer Blocks (10 blocks):
+│   ├── LayerNorm + Multi-Head Attention (3 heads)
 │   ├── Residual connection
 │   ├── LayerNorm + Feed-Forward Network (GELU activation)
 │   └── Residual connection
@@ -273,11 +295,11 @@ Input: 3x32x32 (RGB image)
 ```
 
 **Key ViT Components:**
-- **Patch Embedding**: Divides 32×32 images into 4×4 patches (64 patches total)
+- **Patch Embedding**: Divides 32×32 images into 2×2 patches (256 patches total)
 - **CLS Token**: Learnable classification token prepended to patch sequence
 - **Positional Embeddings**: Learnable positional information for each patch + CLS token
-- **Multi-Head Attention**: 4 attention heads for different feature aspects
-- **Transformer Blocks**: Stack of 4 self-attention and feed-forward layers with residual connections
+- **Multi-Head Attention**: 3 attention heads for different feature aspects
+- **Transformer Blocks**: Stack of 10 self-attention and feed-forward layers with residual connections
 - **Layer Normalization**: Stabilizes training and improves convergence
 - **GELU Activation**: Smooth activation function used in modern transformers
 
