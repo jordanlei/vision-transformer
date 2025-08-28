@@ -12,43 +12,47 @@ A PyTorch-based computer vision project implementing both **Vision Transformers 
 
 ## Table of Contents
 
-- [Model Comparison: Patch Embedding Size](#model-comparison-patch-embedding-size)
-  - [Quantitative Results](#quantitative-results)
-  - [Training Curves](#training-curves)
-  - [Takeaways](#takeaways)
-- [Project Overview](#project-overview)
-- [Project Structure](#project-structure)
-- [Features](#features)
-  - [Neural Network Architectures](#-neural-network-architectures)
-  - [Training Framework](#-training-framework)
-  - [Data Management](#-data-management)
-  - [Visualization & Training Progress](#-visualization--training-progress)
-  - [Interactive Tutorials & Demos](#-interactive-tutorials--demos)
-- [Installation](#installation)
-  - [Prerequisites](#prerequisites)
-  - [Setup](#setup)
-- [Usage](#usage)
-  - [Training a Model](#training-a-model)
-  - [Interactive Tutorials](#interactive-tutorials)
-  - [Custom Training](#custom-training)
-  - [Using Vision Transformer](#using-vision-transformer)
-  - [Attention Visualization](#attention-visualization)
-- [Model Architecture](#model-architecture)
-- [Performance](#performance)
-  - [CNN Results](#cnn-results)
-  - [Vision Transformer Results](#vision-transformer-results)
-- [Dependencies](#dependencies)
-- [Development Status](#development-status)
-  - [Completed](#-completed)
-  - [In Progress](#-in-progress)
-  - [Planned Features](#-planned-features)
+- [Analysis](#analysis)
+  - [Model Comparison: Patch Embedding Size](#model-comparison-patch-embedding-size)
+    - [Quantitative Results](#quantitative-results)
+    - [Training Curves](#training-curves)
+    - [Takeaways](#takeaways)
+  - [Project Overview](#project-overview)
+- [Code](#code)
+  - [Project Structure](#project-structure)
+  - [Features](#features)
+    - [Neural Network Architectures](#-neural-network-architectures)
+    - [Training Framework](#-training-framework)
+    - [Data Management](#-data-management)
+    - [Visualization & Training Progress](#-visualization--training-progress)
+    - [Interactive Tutorials & Demos](#-interactive-tutorials--demos)
+  - [Installation](#installation)
+    - [Prerequisites](#prerequisites)
+    - [Setup](#setup)
+  - [Usage](#usage)
+    - [Training a Model](#training-a-model)
+    - [Interactive Tutorials](#interactive-tutorials)
+    - [Custom Training](#custom-training)
+    - [Using Vision Transformer](#using-vision-transformer)
+    - [Attention Visualization](#attention-visualization)
+  - [Model Architecture](#model-architecture)
+  - [Performance](#performance)
+    - [CNN Results](#cnn-results)
+    - [Vision Transformer Results](#vision-transformer-results)
+  - [Dependencies](#dependencies)
+  - [Development Status](#development-status)
+    - [Completed](#-completed)
+    - [In Progress](#-in-progress)
+    - [Planned Features](#-planned-features)
 - [Contributing](#contributing)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
 
 ---
 
-## Model Comparison: Patch Embedding Size
+## Analysis
+
+### Model Comparison: Patch Embedding Size
 
 We compared a baseline CNN against Vision Transformers (ViTs) trained from scratch on CIFAR-10 with varying patch sizes.  
 
@@ -89,8 +93,7 @@ The curves highlight two trends:
 
 In short: on CIFAR-10, a simple CNN beats a ViT trained from scratch, but the ViT results align with known trends from the literature.
 
-
-## Project Overview
+### Project Overview
 
 This project provides a complete training pipeline for image classification using PyTorch, featuring:
 - **CNN Architecture**: A custom convolutional neural network designed for CIFAR-10
@@ -101,7 +104,11 @@ This project provides a complete training pipeline for image classification usin
 - **Model Persistence**: Save and load functionality for trained models
 - **Interactive Demos**: Jupyter notebooks for tutorials and attention visualization
 
-## Project Structure
+---
+
+## Code
+
+### Project Structure
 
 ```
 vision-transformer/
@@ -125,9 +132,9 @@ vision-transformer/
 └── .venv/              # Virtual environment (excluded from git)
 ```
 
-## Features
+### Features
 
-### 🧠 Neural Network Architectures
+#### 🧠 Neural Network Architectures
 
 **CNN (Convolutional Neural Network)**
 - 2 convolutional layers with ReLU activation
@@ -148,7 +155,7 @@ vision-transformer/
 - Configurable number of transformer blocks and attention heads
 - Optimized for CIFAR-10 classification
 
-### 🚀 Training Framework
+#### 🚀 Training Framework
 
 **Runner Class**
 - Comprehensive training loop with progress bars
@@ -166,7 +173,7 @@ vision-transformer/
 - Final test evaluation
 - **Animated training progress visualization** with GIF generation
 
-### 📊 Data Management
+#### 📊 Data Management
 
 **CIFAR-10 Dataset**
 - Automatic download and setup
@@ -174,7 +181,7 @@ vision-transformer/
 - Data augmentation with normalization
 - Batch processing with configurable batch sizes
 
-### 📈 Visualization & Training Progress
+#### 📈 Visualization & Training Progress
 
 **Real-time Metrics Display**
 - Live progress bars with current epoch, loss, and accuracy
@@ -193,7 +200,7 @@ vision-transformer/
 - Understand what the model "sees" when making predictions
 - Interactive Jupyter notebook tutorial
 
-### 🎓 Interactive Tutorials & Demos
+#### 🎓 Interactive Tutorials & Demos
 
 **ViT Tutorial Notebook** (`demos/vit_tutorial.ipynb`)
 - Step-by-step explanation of Vision Transformer components
@@ -207,15 +214,15 @@ vision-transformer/
 - Generate attention heatmaps overlaid on images
 - Analyze model interpretability and decision-making process
 
-## Installation
+### Installation
 
-### Prerequisites
+#### Prerequisites
 - Python 3.8+
 - PyTorch 2.0+
 - Apple Silicon Mac (for MPS acceleration) or CUDA-capable GPU
 - Jupyter Notebook (for interactive demos)
 
-### Setup
+#### Setup
 
 1. **Clone the repository**
    ```bash
@@ -241,9 +248,9 @@ vision-transformer/
    pip install jupyter
    ```
 
-## Usage
+### Usage
 
-### Training a Model
+#### Training a Model
 
 Run the main training script:
 ```bash
@@ -258,7 +265,7 @@ This will:
 5. Save the trained model as `VisionTransformer.pt`
 6. Report final test performance
 
-### Interactive Tutorials
+#### Interactive Tutorials
 
 **Start Jupyter Notebook server:**
 ```bash
@@ -270,7 +277,7 @@ jupyter notebook
 - **ViT Tutorial**: Learn about Vision Transformer architecture and components
 - **Attention Maps**: Visualize attention weights and understand model decisions
 
-### Custom Training
+#### Custom Training
 
 Modify `train.py` to:
 - Change the number of epochs (currently set to 20)
@@ -278,7 +285,7 @@ Modify `train.py` to:
 - Adjust hyperparameters (learning rate, batch size, model architecture)
 - Change the validation split ratio
 
-### Using Vision Transformer
+#### Using Vision Transformer
 
 To train with the Vision Transformer architecture:
 
@@ -299,7 +306,7 @@ runner = Runner(model, optimizer, criterion, device)
 runner.train(train_loader, val_loader, epochs=20)  # Updated to 20 epochs
 ```
 
-### Attention Visualization
+#### Attention Visualization
 
 After training a model, use the attention maps tutorial:
 
@@ -317,7 +324,7 @@ with torch.no_grad():
 visualize_attention_maps(images, attention_weights)
 ```
 
-## Model Architecture
+### Model Architecture
 
 **CNN Architecture Details:**
 ```
@@ -356,15 +363,15 @@ Input: 3x32x32 (RGB image)
 - **Layer Normalization**: Stabilizes training and improves convergence
 - **GELU Activation**: Smooth activation function used in modern transformers
 
-## Performance
+### Performance
 
-### CNN Results
+#### CNN Results
 The CNN implementation achieves:
 - **Training Accuracy**: ~60% (after 1 epoch)
 - **Test Accuracy**: ~52% (after 1 epoch)
 - **Training Time**: ~20 seconds per epoch on Apple Silicon M1
 
-### Vision Transformer Results
+#### Vision Transformer Results
 Our fully trained Vision Transformer achieves:
 - **Final Test Loss**: 1.1176
 - **Final Test Accuracy**: 60.63%
@@ -372,7 +379,7 @@ Our fully trained Vision Transformer achieves:
 - **Convergence**: Stable training over 20 epochs with consistent improvement
 - **Model Size**: Optimized architecture with 64 hidden dimensions and 4 transformer blocks
 
-## Dependencies
+### Dependencies
 
 - **PyTorch** (≥2.0.0): Deep learning framework
 - **TorchVision** (≥0.15.0): Computer vision utilities
@@ -382,9 +389,9 @@ Our fully trained Vision Transformer achieves:
 - **Jupyter**: Interactive notebook environment
 - **tqdm**: Progress bars (installed separately)
 
-## Development Status
+### Development Status
 
-### ✅ Completed
+#### ✅ Completed
 - CNN architecture implementation
 - Vision Transformer (ViT) architecture implementation
 - Complete transformer components (attention, positional embeddings, patch embedding)
@@ -399,12 +406,12 @@ Our fully trained Vision Transformer achieves:
 - **Attention map visualization capabilities**
 - **Updated training parameters (20 epochs, optimized architecture)**
 
-### 🔄 In Progress
+#### 🔄 In Progress
 - Model performance optimization
 - Hyperparameter tuning for both architectures
 - Performance comparison analysis
 
-### 📋 Planned Features
+#### 📋 Planned Features
 - Advanced data augmentation
 - Learning rate scheduling
 - Early stopping
@@ -416,7 +423,7 @@ Our fully trained Vision Transformer achieves:
 - Model interpretability analysis
 - Performance benchmarking
 
-## Contributing
+### Contributing
 
 1. Fork the repository
 2. Create a feature branch
@@ -424,7 +431,7 @@ Our fully trained Vision Transformer achieves:
 4. Add tests if applicable
 5. Submit a pull request
 
-## License
+### License
 
 This project is licensed under the MIT License - see below for details:
 
@@ -452,7 +459,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-## Acknowledgments
+### Acknowledgments
 
 - CIFAR-10 dataset creators
 - PyTorch development team
