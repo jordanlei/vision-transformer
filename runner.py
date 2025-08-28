@@ -74,8 +74,20 @@ class Runner:
 
         return loss / len(test_loader), accuracy / len(test_loader)
 
-    def save(self, path): 
-        self.model.save(path)
+    def save_model(self, path):
+        torch.save(self.model.state_dict(), path)
+
+    def save(self, path):
+        import pickle
+        with open(path, 'wb') as f:
+            pickle.dump(self, f)
+
+    @classmethod
+    def load(cls, path):
+        import pickle
+        with open(path, 'rb') as f:
+            data = pickle.load(f)
+            return data
 
     def plot(self, val_loader = None, save_path=None):
         """Plot training and validation metrics"""

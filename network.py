@@ -228,15 +228,16 @@ class PatchEmbedding(nn.Module):
         return model
 
 class VisionTransformer(nn.Module): 
-    def __init__(self, img_size, hidden_size, output_size, num_heads, num_blocks):
+    def __init__(self, img_size, hidden_size, output_size, num_heads, num_blocks, patch_size):
         super(VisionTransformer, self).__init__()
         self.img_size = img_size
         self.hidden_size = hidden_size
         self.output_size = output_size
         self.num_heads = num_heads
         self.num_blocks = num_blocks
+        self.patch_size = patch_size
         
-        self.patch_embedding = PatchEmbedding(3, img_size, patch_size = 4, hidden_size = hidden_size)
+        self.patch_embedding = PatchEmbedding(3, img_size, patch_size, hidden_size = hidden_size)
         self.blocks = nn.ModuleList([TransformerBlock(hidden_size, num_heads) for _ in range(num_blocks)])
         self.fc = nn.Linear(hidden_size, output_size)
 
@@ -255,7 +256,8 @@ class VisionTransformer(nn.Module):
             'hidden_size': self.hidden_size,
             'output_size': self.output_size,
             'num_heads': self.num_heads,
-            'num_blocks': self.num_blocks
+            'num_blocks': self.num_blocks,
+            'patch_size': self.patch_size
         }
         torch.save(metadata, path)
 

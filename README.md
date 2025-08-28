@@ -10,6 +10,86 @@ A PyTorch-based computer vision project implementing both **Vision Transformers 
 
 *Visualization of learned attention maps after training*
 
+## Table of Contents
+
+- [Model Comparison: Patch Embedding Size](#model-comparison-patch-embedding-size)
+  - [Quantitative Results](#quantitative-results)
+  - [Training Curves](#training-curves)
+  - [Takeaways](#takeaways)
+- [Project Overview](#project-overview)
+- [Project Structure](#project-structure)
+- [Features](#features)
+  - [Neural Network Architectures](#-neural-network-architectures)
+  - [Training Framework](#-training-framework)
+  - [Data Management](#-data-management)
+  - [Visualization & Training Progress](#-visualization--training-progress)
+  - [Interactive Tutorials & Demos](#-interactive-tutorials--demos)
+- [Installation](#installation)
+  - [Prerequisites](#prerequisites)
+  - [Setup](#setup)
+- [Usage](#usage)
+  - [Training a Model](#training-a-model)
+  - [Interactive Tutorials](#interactive-tutorials)
+  - [Custom Training](#custom-training)
+  - [Using Vision Transformer](#using-vision-transformer)
+  - [Attention Visualization](#attention-visualization)
+- [Model Architecture](#model-architecture)
+- [Performance](#performance)
+  - [CNN Results](#cnn-results)
+  - [Vision Transformer Results](#vision-transformer-results)
+- [Dependencies](#dependencies)
+- [Development Status](#development-status)
+  - [Completed](#-completed)
+  - [In Progress](#-in-progress)
+  - [Planned Features](#-planned-features)
+- [Contributing](#contributing)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
+
+---
+
+## Model Comparison: Patch Embedding Size
+
+We compared a baseline CNN against Vision Transformers (ViTs) trained from scratch on CIFAR-10 with varying patch sizes.  
+
+### Quantitative Results
+| Model           | Test Loss | Test Accuracy |
+|-----------------|-----------|---------------|
+| CNN             | 0.962     | **67.0%**     |
+| ViT (patch=2)   | 1.272     | 63.1%         |
+| ViT (patch=4)   | 1.394     | 60.1%         |
+| ViT (patch=6)   | 1.675     | 56.6%         |
+| ViT (patch=8)   | 1.872     | 55.3%         |
+
+We also computed **bootstrapped accuracy differences** relative to the CNN baseline:
+
+<p align="center">
+  <img src="figures/model_comparison_bootstrap.png" width="500">
+</p>
+
+The CNN consistently outperforms all ViTs, and performance decreases steadily with larger patch sizes.
+
+---
+
+### Training Curves
+<p align="center">
+  <img src="figures/model_comparison_curves.png" width="600">
+</p>
+
+The curves highlight two trends:
+- The CNN converges faster and reaches higher validation accuracy.
+- Smaller patch sizes (e.g., 2×2) help ViTs retain more local detail and improve performance relative to larger patches, but they still lag behind CNNs.
+
+---
+
+### Takeaways
+- **Inductive biases matter:** On small datasets like CIFAR-10, CNNs have strong locality and translation equivariance built in, giving them an advantage over ViTs.  
+- **ViTs need more data or pretraining:** In low-data regimes, ViTs trained from scratch underperform CNNs, but with sufficient scale or augmentations they can surpass CNNs.  
+- **Patch size tradeoff:** Smaller patches preserve detail and perform better, while larger patches discard local structure and hurt accuracy.  
+
+In short: on CIFAR-10, a simple CNN beats a ViT trained from scratch, but the ViT results align with known trends from the literature.
+
+
 ## Project Overview
 
 This project provides a complete training pipeline for image classification using PyTorch, featuring:
