@@ -1,4 +1,4 @@
-# Vision Transformer Project
+# Image Classification with Vision Transformers
 
 A PyTorch-based computer vision project implementing both **Vision Transformers (ViT)** and **Convolutional Neural Networks (CNNs)** for image classification on the CIFAR-10 dataset.
 
@@ -46,7 +46,7 @@ A PyTorch-based computer vision project implementing both **Vision Transformers 
 
 ### Model Comparison: Patch Embedding Size
 
-We compared a baseline CNN against Vision Transformers (ViTs) trained from scratch on CIFAR-10 with varying patch sizes.  
+We compared a baseline CNN against Vision Transformers (ViTs) trained from scratch on CIFAR-10 with varying patch sizes. We trained a baseline convolutional neural network (CNN) and several Vision Transformers (ViTs) with varying patch sizes on the CIFAR-10 dataset. All models were trained from scratch using the same optimizer, learning rate schedule, and number of epochs to ensure comparability.
 
 ### Quantitative Results
 | Model           | Test Loss | Test Accuracy |
