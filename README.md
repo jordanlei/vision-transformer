@@ -36,15 +36,7 @@ A PyTorch-based computer vision project implementing both **Vision Transformers 
     - [Using Vision Transformer](#using-vision-transformer)
     - [Attention Visualization](#attention-visualization)
   - [Model Architecture](#model-architecture)
-  - [Performance](#performance)
-    - [CNN Results](#cnn-results)
-    - [Vision Transformer Results](#vision-transformer-results)
   - [Dependencies](#dependencies)
-  - [Development Status](#development-status)
-    - [Completed](#-completed)
-    - [In Progress](#-in-progress)
-    - [Planned Features](#-planned-features)
-- [Contributing](#contributing)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
 
@@ -134,85 +126,11 @@ vision-transformer/
 
 ### Features
 
-#### 🧠 Neural Network Architectures
-
-**CNN (Convolutional Neural Network)**
-- 2 convolutional layers with ReLU activation
-- Max pooling for dimensionality reduction
-- Fully connected output layer for 10-class classification
-- Optimized for CIFAR-10 (32x32x3 images)
-
-**FeedForward Network**
-- Simple multi-layer perceptron
-- Configurable input, hidden, and output sizes
-- ReLU activation function
-
-**Vision Transformer (ViT)**
-- Complete transformer-based architecture for image classification
-- Patch embedding with 4×4 patches (64 patches for 32×32 images)
-- Multi-head self-attention mechanism
-- Learnable CLS token and positional embeddings
-- Configurable number of transformer blocks and attention heads
-- Optimized for CIFAR-10 classification
-
-#### 🚀 Training Framework
-
-**Runner Class**
-- Comprehensive training loop with progress bars
-- Real-time metrics tracking (loss, accuracy)
-- Validation during training
-- Automatic device detection (MPS/GPU/CPU)
-- Built-in plotting and visualization
-- Model checkpointing and restoration
-
-**Key Features**
-- Automatic device selection (Apple Silicon MPS, CUDA, or CPU)
-- Progress bars with live metrics display
-- Comprehensive metrics logging
-- Validation at each epoch
-- Final test evaluation
-- **Animated training progress visualization** with GIF generation
-
-#### 📊 Data Management
-
-**CIFAR-10 Dataset**
-- Automatic download and setup
-- Train/validation split (80/20)
-- Data augmentation with normalization
-- Batch processing with configurable batch sizes
-
-#### 📈 Visualization & Training Progress
-
-**Real-time Metrics Display**
-- Live progress bars with current epoch, loss, and accuracy
-- Training and validation metrics updated in real-time
-- Comprehensive logging of all training steps
-
-**Animated Training Progress**
-- Automatic generation of training progress GIFs
-- Visual representation of convergence over multiple epochs
-- Frame-by-frame breakdown of training evolution
-- Customizable animation parameters (frame duration, transitions)
-
-**Attention Map Visualization**
-- Extract and visualize attention weights from trained ViT models
-- Overlay attention maps on input images
-- Understand what the model "sees" when making predictions
-- Interactive Jupyter notebook tutorial
-
-#### 🎓 Interactive Tutorials & Demos
-
-**ViT Tutorial Notebook** (`demos/vit_tutorial.ipynb`)
-- Step-by-step explanation of Vision Transformer components
-- Code breakdown and architecture visualization
-- Practical examples and demonstrations
-- Understanding transformer blocks, attention mechanisms, and patch embeddings
-
-**Attention Maps Tutorial** (`demos/attention_maps.ipynb`)
-- Complete guide to attention visualization
-- Extract attention weights from trained models
-- Generate attention heatmaps overlaid on images
-- Analyze model interpretability and decision-making process
+- **Neural Network Architectures**: CNN, FeedForward, and Vision Transformer (ViT) implementations
+- **Training Framework**: Complete training pipeline with metrics tracking and visualization
+- **Data Management**: Automatic CIFAR-10 dataset download and preprocessing
+- **Visualization**: Training progress animations and attention map visualization
+- **Interactive Demos**: Jupyter notebooks for tutorials and model exploration
 
 ### Installation
 
@@ -363,22 +281,6 @@ Input: 3x32x32 (RGB image)
 - **Layer Normalization**: Stabilizes training and improves convergence
 - **GELU Activation**: Smooth activation function used in modern transformers
 
-### Performance
-
-#### CNN Results
-The CNN implementation achieves:
-- **Training Accuracy**: ~60% (after 1 epoch)
-- **Test Accuracy**: ~52% (after 1 epoch)
-- **Training Time**: ~20 seconds per epoch on Apple Silicon M1
-
-#### Vision Transformer Results
-Our fully trained Vision Transformer achieves:
-- **Final Test Loss**: 1.1176
-- **Final Test Accuracy**: 60.63%
-- **Training Time**: ~7-9 seconds per epoch on Apple Silicon M1
-- **Convergence**: Stable training over 20 epochs with consistent improvement
-- **Model Size**: Optimized architecture with 64 hidden dimensions and 4 transformer blocks
-
 ### Dependencies
 
 - **PyTorch** (≥2.0.0): Deep learning framework
@@ -388,48 +290,6 @@ Our fully trained Vision Transformer achieves:
 - **Pillow** (≥8.0.0): Image processing
 - **Jupyter**: Interactive notebook environment
 - **tqdm**: Progress bars (installed separately)
-
-### Development Status
-
-#### ✅ Completed
-- CNN architecture implementation
-- Vision Transformer (ViT) architecture implementation
-- Complete transformer components (attention, positional embeddings, patch embedding)
-- **Fully trained ViT model with 60.63% test accuracy**
-- Training framework with metrics tracking
-- CIFAR-10 data pipeline
-- Model saving/loading
-- Training visualization with animated progress GIFs
-- Virtual environment setup
-- Comprehensive .gitignore
-- **Interactive Jupyter notebook tutorials**
-- **Attention map visualization capabilities**
-- **Updated training parameters (20 epochs, optimized architecture)**
-
-#### 🔄 In Progress
-- Model performance optimization
-- Hyperparameter tuning for both architectures
-- Performance comparison analysis
-
-#### 📋 Planned Features
-- Advanced data augmentation
-- Learning rate scheduling
-- Early stopping
-- Cross-validation
-- Model ensemble methods
-- Transfer learning support
-- Extended training runs (50+ epochs)
-- Additional visualization tools
-- Model interpretability analysis
-- Performance benchmarking
-
-### Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
 
 ### License
 
