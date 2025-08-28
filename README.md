@@ -4,7 +4,11 @@ A PyTorch-based computer vision project implementing both **Vision Transformers 
 
 ![Training Progress Animation](animation_vit.gif)
 
-*Training progress visualization showing the convergence of our Vision Transformer over 20 epochs*
+*Training progress visualization showing the convergence of our Vision Transformer over 10 epochs*
+
+![Visualization](figures/attention_maps.png)
+
+*Visualization of learned attention maps after training*
 
 ## Project Overview
 
