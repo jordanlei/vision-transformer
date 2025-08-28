@@ -60,7 +60,7 @@ We compared a baseline CNN against Vision Transformers (ViTs) trained from scrat
 We also computed **bootstrapped accuracy differences** relative to the CNN baseline:
 
 <p align="center">
-  <img src="figures/model_comparison_bootstrap.png" width="500">
+  <img src="figures/model_comparison_bootstrap.png" width="900">
 </p>
 
 The CNN consistently outperforms all ViTs, and performance decreases steadily with larger patch sizes.
@@ -69,7 +69,7 @@ The CNN consistently outperforms all ViTs, and performance decreases steadily wi
 
 ### Training Curves
 <p align="center">
-  <img src="figures/model_comparison_curves.png" width="600">
+  <img src="figures/model_comparison_curves.png" width="900">
 </p>
 
 The curves highlight two trends:
