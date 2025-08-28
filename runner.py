@@ -5,16 +5,18 @@ import torchvision.transforms as transforms
 from collections import defaultdict
 from tqdm import tqdm
 import matplotlib.pyplot as plt
+import matplotlib
 
 class Runner:
     """Training/testing runner class for PyTorch models"""
-    def __init__(self, model, optimizer, criterion, device):
+    def __init__(self, model, optimizer, criterion, device, plot_path = None):
         # Initialize runner with model, optimizer, loss function and device
         self.model = model
         self.device = device
         self.optimizer = optimizer
         self.criterion = criterion
         self.metrics = defaultdict(list)
+        self.plot_path = plot_path
 
     def train(self, train_loader, val_loader, epochs):
         # Train model for specified number of epochs
@@ -45,8 +47,12 @@ class Runner:
                 self.metrics['train_accuracy'].append(accuracy.item())
                 self.metrics['train_step'].append(train_step)
                 train_step += 1
-                progress_bar.set_description(f"Epoch {epoch}, Val Loss {val_loss:.4f}, Val Accuracy {val_accuracy:.4f}, Train Loss {loss.item():.4f}, Train Accuracy {accuracy.item():.4f}")
-        
+
+                if train_step % 100 == 0:
+                    progress_bar.set_description(f"Epoch {epoch}, Val Loss {val_loss:.4f}, Val Accuracy {val_accuracy:.4f}, Train Loss {loss.item():.4f}, Train Accuracy {accuracy.item():.4f}")
+                    if self.plot_path:
+                        self.plot(val_loader, save_path=f'{self.plot_path}/{self.model.__class__.__name__}_{train_step:08d}.png')   
+
         # Final validation step
         final_loss, final_accuracy = self.test(val_loader)
         self.metrics['val_loss'].append(final_loss)
@@ -98,28 +104,78 @@ class Runner:
         runner = cls(model, optimizer, criterion, metadata['device'])
         return runner
 
-    def plot(self, save_path=None):
+    def plot(self, val_loader = None, save_path=None):
         """Plot training and validation metrics"""
-        fig, axs = plt.subplots(2, 1, figsize=(12, 8))
+        fig = plt.figure(figsize=(8, 10))
+        
+        # Create subplot mosaic layout
+        if val_loader is not None:
+            mosaic = """
+            AB
+            CC
+            """
+            height_ratios = [0.8, 1]
+        else:
+            mosaic = "AB"
+            height_ratios = [1, 1]
+            
+        ax_dict = fig.subplot_mosaic(mosaic, height_ratios=height_ratios)
         
         # Plot training and validation metrics
-        axs[0].plot(self.metrics['train_step'], self.metrics['train_loss'], label='Train Loss')
-        axs[0].plot(self.metrics['val_step'], self.metrics['val_loss'], label='Validation Loss')
-        axs[0].set_xlabel('Step')
-        axs[0].set_ylabel('Loss')
-        axs[0].set_title('Training and Validation Loss')
-        axs[0].legend()
+        ax_dict['A'].plot(self.metrics['train_step'], self.metrics['train_loss'], label='Train Loss')
+        ax_dict['A'].plot(self.metrics['val_step'], self.metrics['val_loss'], label='Validation Loss')
+        ax_dict['A'].set_xlabel('Step')
+        ax_dict['A'].set_ylabel('Loss')
+        ax_dict['A'].set_title('Training and Validation Loss')
+        ax_dict['A'].legend()
         
-        axs[1].plot(self.metrics['train_step'], self.metrics['train_accuracy'], label='Train Accuracy')
-        axs[1].plot(self.metrics['val_step'], self.metrics['val_accuracy'], label='Validation Accuracy')
-        axs[1].set_xlabel('Step')
-        axs[1].set_ylabel('Accuracy')
-        axs[1].set_title('Training and Validation Accuracy')
-        axs[1].legend()
-        
+        ax_dict['B'].plot(self.metrics['train_step'], self.metrics['train_accuracy'], label='Train Accuracy')
+        ax_dict['B'].plot(self.metrics['val_step'], self.metrics['val_accuracy'], label='Validation Accuracy')
+        ax_dict['B'].set_xlabel('Step')
+        ax_dict['B'].set_ylabel('Accuracy')
+        ax_dict['B'].set_title('Training and Validation Accuracy')
+        ax_dict['B'].legend()
+        plt.subplots_adjust(hspace=0.4)
+
+        if val_loader is not None:
+            # Get a batch of validation images
+            images, labels = next(iter(val_loader))
+            images = images.to(self.device)
+            
+            # Get model predictions
+            self.model.eval()
+            with torch.no_grad():
+                outputs = self.model(images)
+                probabilities = torch.softmax(outputs, dim=1)
+                top3_prob, top3_idx = torch.topk(probabilities, 3)
+            
+            # Create grid for sample images in bottom panel
+            gs = ax_dict['C'].get_gridspec()
+            ax_dict['C'].remove()
+            axs = gs[1, 0:].subgridspec(2, 3, hspace=0.5).subplots()
+            
+            # Plot first 6 images with their predictions
+            classes = ('airplane', 'automobile', 'bird', 'cat', 'deer',
+                    'dog', 'frog', 'horse', 'ship', 'truck')
+            
+            for i, ax in enumerate(axs.flat[:6]):
+                # Display image
+                img = images[i].cpu() / 2 + 0.5  # Unnormalize
+                img = img.permute(1, 2, 0)  # Convert from (C,H,W) to (H,W,C)
+                ax.imshow(img)
+                ax.axis('off')
+                
+                # Add predictions as title
+                actual_label = classes[labels[i]]
+                predictions = [classes[idx] for idx in top3_idx[i]]
+                title = f"actual: {actual_label}\n{predictions[0]} ({top3_prob[i][0]*100:.1f}%)\n{predictions[1]} ({top3_prob[i][1]*100:.1f}%)\n{predictions[2]} ({top3_prob[i][2]*100:.1f}%)"
+                ax.set_title(title, fontsize=8, pad=10)
+
         if save_path:
             plt.savefig(save_path)
-        plt.show()
+            plt.close()
+        else:
+            plt.show()
         
 
 

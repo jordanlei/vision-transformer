@@ -1,14 +1,19 @@
 # Vision Transformer Project
 
-A PyTorch-based computer vision project implementing convolutional neural networks (CNNs) for image classification on the CIFAR-10 dataset.
+A PyTorch-based computer vision project implementing both **Vision Transformers (ViT)** and **Convolutional Neural Networks (CNNs)** for image classification on the CIFAR-10 dataset.
+
+![Training Progress Animation](animation.gif)
+
+*Training progress visualization showing the convergence of our Vision Transformer over 10 epochs*
 
 ## Project Overview
 
 This project provides a complete training pipeline for image classification using PyTorch, featuring:
 - **CNN Architecture**: A custom convolutional neural network designed for CIFAR-10
+- **Vision Transformer (ViT)**: A fully functional transformer-based architecture with attention mechanisms
 - **Training Framework**: A robust `Runner` class that handles training, validation, and testing
 - **Data Management**: Automatic CIFAR-10 dataset download and preprocessing
-- **Visualization**: Built-in plotting capabilities for training metrics
+- **Visualization**: Built-in plotting capabilities with animated training progress GIFs
 - **Model Persistence**: Save and load functionality for trained models
 
 ## Project Structure
@@ -66,6 +71,7 @@ vision-transformer/
 - Comprehensive metrics logging
 - Validation at each epoch
 - Final test evaluation
+- **Animated training progress visualization** with GIF generation
 
 ### 📊 Data Management
 
@@ -74,6 +80,19 @@ vision-transformer/
 - Train/validation split (80/20)
 - Data augmentation with normalization
 - Batch processing with configurable batch sizes
+
+### 📈 Visualization & Training Progress
+
+**Real-time Metrics Display**
+- Live progress bars with current epoch, loss, and accuracy
+- Training and validation metrics updated in real-time
+- Comprehensive logging of all training steps
+
+**Animated Training Progress**
+- Automatic generation of training progress GIFs
+- Visual representation of convergence over multiple epochs
+- Frame-by-frame breakdown of training evolution
+- Customizable animation parameters (frame duration, transitions)
 
 ## Installation
 
@@ -190,12 +209,18 @@ Input: 3x32x32 (RGB image)
 
 ## Performance
 
-The current CNN implementation achieves:
+### CNN Results
+The CNN implementation achieves:
 - **Training Accuracy**: ~60% (after 1 epoch)
 - **Test Accuracy**: ~52% (after 1 epoch)
 - **Training Time**: ~20 seconds per epoch on Apple Silicon M1
 
-*Note: Performance improves significantly with more training epochs*
+### Vision Transformer Results
+Our fully trained Vision Transformer achieves:
+- **Final Test Loss**: 1.1176
+- **Final Test Accuracy**: 60.63%
+- **Training Time**: ~7-9 seconds per epoch on Apple Silicon M1
+- **Convergence**: Stable training over 10 epochs with consistent improvement
 
 ## Dependencies
 
@@ -212,17 +237,18 @@ The current CNN implementation achieves:
 - CNN architecture implementation
 - Vision Transformer (ViT) architecture implementation
 - Complete transformer components (attention, positional embeddings, patch embedding)
+- **Fully trained ViT model with 60.63% test accuracy**
 - Training framework with metrics tracking
 - CIFAR-10 data pipeline
 - Model saving/loading
-- Training visualization
+- Training visualization with animated progress GIFs
 - Virtual environment setup
 - Comprehensive .gitignore
 
 ### 🔄 In Progress
 - Model performance optimization
-- ViT training and evaluation
-- Hyperparameter tuning for transformer models
+- Hyperparameter tuning for both architectures
+- Performance comparison analysis
 
 ### 📋 Planned Features
 - Advanced data augmentation
@@ -231,7 +257,8 @@ The current CNN implementation achieves:
 - Cross-validation
 - Model ensemble methods
 - Transfer learning support
-- Performance comparison between CNN and ViT
+- Extended training runs (50+ epochs)
+- Attention visualization tools
 
 ## Contributing
 
