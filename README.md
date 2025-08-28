@@ -2,7 +2,7 @@
 
 A PyTorch-based computer vision project implementing both **Vision Transformers (ViT)** and **Convolutional Neural Networks (CNNs)** for image classification on the CIFAR-10 dataset.
 
-![Training Progress Animation](animation.gif)
+![Training Progress Animation](animation_vit.gif)
 
 *Training progress visualization showing the convergence of our Vision Transformer over 10 epochs*
 
