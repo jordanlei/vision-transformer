@@ -4,7 +4,7 @@ A PyTorch-based computer vision project implementing both **Vision Transformers 
 
 ![Training Progress Animation](animation_vit.gif)
 
-*Training progress visualization showing the convergence of our Vision Transformer over 10 epochs*
+*Training progress visualization showing the convergence of our Vision Transformer over 20 epochs*
 
 ## Project Overview
 
@@ -13,22 +13,31 @@ This project provides a complete training pipeline for image classification usin
 - **Vision Transformer (ViT)**: A fully functional transformer-based architecture with attention mechanisms
 - **Training Framework**: A robust `Runner` class that handles training, validation, and testing
 - **Data Management**: Automatic CIFAR-10 dataset download and preprocessing
-- **Visualization**: Built-in plotting capabilities with animated training progress GIFs
+- **Visualization**: Built-in plotting capabilities with animated training progress GIFs and attention map visualization
 - **Model Persistence**: Save and load functionality for trained models
+- **Interactive Demos**: Jupyter notebooks for tutorials and attention visualization
 
 ## Project Structure
 
 ```
 vision-transformer/
-├── network.py          # Neural network architectures (CNN, FeedForward)
+├── network.py          # Neural network architectures (CNN, FeedForward, ViT)
 ├── runner.py           # Training orchestration and metrics tracking
-├── train.py            # Main training script
+├── train.py            # Main training script (updated for 20 epochs)
 ├── setup_cifar.py      # CIFAR-10 dataset setup utilities
-├── utils.py            # Utility functions (currently empty)
+├── utils.py            # Utility functions for GIF generation
 ├── requirements.txt    # Python dependencies
 ├── .gitignore          # Git ignore rules
 ├── data/               # CIFAR-10 dataset storage
+│   └── cifar-10-batches-py/  # CIFAR-10 data files
+├── demos/              # Interactive tutorials and demonstrations
+│   ├── vit_tutorial.ipynb     # Vision Transformer code explanation
+│   └── attention_maps.ipynb   # Attention visualization tutorial
 ├── figures/            # Generated plots and visualizations
+│   └── attention_maps.png     # Example attention map visualization
+├── saved/              # Trained model checkpoints
+│   └── VisionTransformer.pt   # Pre-trained ViT model
+├── animation_vit.gif   # Training progress animation
 └── .venv/              # Virtual environment (excluded from git)
 ```
 
@@ -94,12 +103,33 @@ vision-transformer/
 - Frame-by-frame breakdown of training evolution
 - Customizable animation parameters (frame duration, transitions)
 
+**Attention Map Visualization**
+- Extract and visualize attention weights from trained ViT models
+- Overlay attention maps on input images
+- Understand what the model "sees" when making predictions
+- Interactive Jupyter notebook tutorial
+
+### 🎓 Interactive Tutorials & Demos
+
+**ViT Tutorial Notebook** (`demos/vit_tutorial.ipynb`)
+- Step-by-step explanation of Vision Transformer components
+- Code breakdown and architecture visualization
+- Practical examples and demonstrations
+- Understanding transformer blocks, attention mechanisms, and patch embeddings
+
+**Attention Maps Tutorial** (`demos/attention_maps.ipynb`)
+- Complete guide to attention visualization
+- Extract attention weights from trained models
+- Generate attention heatmaps overlaid on images
+- Analyze model interpretability and decision-making process
+
 ## Installation
 
 ### Prerequisites
 - Python 3.8+
 - PyTorch 2.0+
 - Apple Silicon Mac (for MPS acceleration) or CUDA-capable GPU
+- Jupyter Notebook (for interactive demos)
 
 ### Setup
 
@@ -122,6 +152,11 @@ vision-transformer/
    pip install -r requirements.txt
    ```
 
+4. **Install Jupyter for interactive demos**
+   ```bash
+   pip install jupyter
+   ```
+
 ## Usage
 
 ### Training a Model
@@ -133,18 +168,30 @@ python train.py
 
 This will:
 1. Download CIFAR-10 dataset (if not already present)
-2. Train a CNN model for 1 epoch
+2. Train a Vision Transformer model for 20 epochs
 3. Display training progress with live metrics
-4. Generate training plots
-5. Save the trained model as `CNN.pth`
+4. Generate training plots and animated GIF
+5. Save the trained model as `VisionTransformer.pt`
 6. Report final test performance
+
+### Interactive Tutorials
+
+**Start Jupyter Notebook server:**
+```bash
+cd demos
+jupyter notebook
+```
+
+**Available Tutorials:**
+- **ViT Tutorial**: Learn about Vision Transformer architecture and components
+- **Attention Maps**: Visualize attention weights and understand model decisions
 
 ### Custom Training
 
 Modify `train.py` to:
-- Change the number of epochs
+- Change the number of epochs (currently set to 20)
 - Use different models (CNN, FeedForward, or VisionTransformer)
-- Adjust hyperparameters (learning rate, batch size)
+- Adjust hyperparameters (learning rate, batch size, model architecture)
 - Change the validation split ratio
 
 ### Using Vision Transformer
@@ -157,18 +204,36 @@ from network import VisionTransformer
 # Create ViT model with custom parameters
 model = VisionTransformer(
     img_size=32,        # CIFAR-10 image size
-    hidden_size=128,    # Embedding dimension
+    hidden_size=64,     # Embedding dimension (updated from 128)
     output_size=10,     # Number of classes
-    num_heads=8,        # Number of attention heads
-    num_blocks=6        # Number of transformer blocks
+    num_heads=4,        # Number of attention heads (updated from 8)
+    num_blocks=4        # Number of transformer blocks (updated from 6)
 )
 
 # Use with existing training pipeline
 runner = Runner(model, optimizer, criterion, device)
-runner.train(train_loader, val_loader, epochs=10)
+runner.train(train_loader, val_loader, epochs=20)  # Updated to 20 epochs
 ```
 
-### Model Architecture
+### Attention Visualization
+
+After training a model, use the attention maps tutorial:
+
+```python
+# Load trained model
+model = VisionTransformer.load("saved/VisionTransformer.pt")
+
+# Extract attention weights
+with torch.no_grad():
+    # Forward pass to get attention weights
+    output = model(images, return_attention=True)
+    attention_weights = output['attention_weights']
+    
+# Visualize attention maps
+visualize_attention_maps(images, attention_weights)
+```
+
+## Model Architecture
 
 **CNN Architecture Details:**
 ```
@@ -185,25 +250,25 @@ Input: 3x32x32 (RGB image)
 ```
 Input: 3x32x32 (RGB image)
 ├── Patch Embedding:
-│   ├── Conv2d(3→128, kernel=4x4, stride=4) → 8x8 patches
-│   ├── Flatten patches → 64 patches × 128 dimensions
-│   ├── Add CLS token → 65 patches × 128 dimensions
+│   ├── Conv2d(3→64, kernel=4x4, stride=4) → 8x8 patches
+│   ├── Flatten patches → 64 patches × 64 dimensions
+│   ├── Add CLS token → 65 patches × 64 dimensions
 │   └── Add positional embeddings
-├── Transformer Blocks (configurable count):
-│   ├── LayerNorm + Multi-Head Attention (configurable heads)
+├── Transformer Blocks (4 blocks):
+│   ├── LayerNorm + Multi-Head Attention (4 heads)
 │   ├── Residual connection
 │   ├── LayerNorm + Feed-Forward Network (GELU activation)
 │   └── Residual connection
 ├── Extract CLS token representation
-└── Linear(128→10) → Output
+└── Linear(64→10) → Output
 ```
 
 **Key ViT Components:**
 - **Patch Embedding**: Divides 32×32 images into 4×4 patches (64 patches total)
 - **CLS Token**: Learnable classification token prepended to patch sequence
 - **Positional Embeddings**: Learnable positional information for each patch + CLS token
-- **Multi-Head Attention**: Configurable number of attention heads for different feature aspects
-- **Transformer Blocks**: Stack of self-attention and feed-forward layers with residual connections
+- **Multi-Head Attention**: 4 attention heads for different feature aspects
+- **Transformer Blocks**: Stack of 4 self-attention and feed-forward layers with residual connections
 - **Layer Normalization**: Stabilizes training and improves convergence
 - **GELU Activation**: Smooth activation function used in modern transformers
 
@@ -220,7 +285,8 @@ Our fully trained Vision Transformer achieves:
 - **Final Test Loss**: 1.1176
 - **Final Test Accuracy**: 60.63%
 - **Training Time**: ~7-9 seconds per epoch on Apple Silicon M1
-- **Convergence**: Stable training over 10 epochs with consistent improvement
+- **Convergence**: Stable training over 20 epochs with consistent improvement
+- **Model Size**: Optimized architecture with 64 hidden dimensions and 4 transformer blocks
 
 ## Dependencies
 
@@ -229,6 +295,7 @@ Our fully trained Vision Transformer achieves:
 - **Matplotlib** (≥3.5.0): Plotting and visualization
 - **NumPy** (≥1.21.0): Numerical computing
 - **Pillow** (≥8.0.0): Image processing
+- **Jupyter**: Interactive notebook environment
 - **tqdm**: Progress bars (installed separately)
 
 ## Development Status
@@ -244,6 +311,9 @@ Our fully trained Vision Transformer achieves:
 - Training visualization with animated progress GIFs
 - Virtual environment setup
 - Comprehensive .gitignore
+- **Interactive Jupyter notebook tutorials**
+- **Attention map visualization capabilities**
+- **Updated training parameters (20 epochs, optimized architecture)**
 
 ### 🔄 In Progress
 - Model performance optimization
@@ -258,7 +328,9 @@ Our fully trained Vision Transformer achieves:
 - Model ensemble methods
 - Transfer learning support
 - Extended training runs (50+ epochs)
-- Attention visualization tools
+- Additional visualization tools
+- Model interpretability analysis
+- Performance benchmarking
 
 ## Contributing
 
@@ -301,9 +373,10 @@ SOFTWARE.
 - CIFAR-10 dataset creators
 - PyTorch development team
 - Apple Silicon MPS support
+- Jupyter project contributors
 
 ---
 
-**Last Updated**: August 2024
+**Last Updated**: December 2024
 **Status**: Active Development
-**Version**: 1.0.0
+**Version**: 1.1.0

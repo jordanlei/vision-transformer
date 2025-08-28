@@ -46,7 +46,7 @@ def main():
         num_blocks=4
     )
 
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.0005)
     criterion = nn.CrossEntropyLoss()
     model.to(device)
 
@@ -54,7 +54,7 @@ def main():
         os.makedirs('temp')
     
     runner = Runner(model, optimizer, criterion, device, plot_path="temp")
-    runner.train(train_loader, val_loader, epochs=10)
+    runner.train(train_loader, val_loader, epochs=20)
     write_to_gif("temp")
 
     # Clean up temporary files
@@ -66,7 +66,7 @@ def main():
     test_loss, test_accuracy = runner.test(test_loader)
     print(f"Final Test Loss: {test_loss:.4f}, Final Test Accuracy: {test_accuracy:.4f}")
 
-    runner.save(f'{model.__class__.__name__}.pth')
+    runner.save(f'saved/{model.__class__.__name__}.pt')
 
 if __name__ == "__main__":
     main()    

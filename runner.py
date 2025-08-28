@@ -74,35 +74,8 @@ class Runner:
 
         return loss / len(test_loader), accuracy / len(test_loader)
 
-    def save(self, path):
-        # Save model, optimizer, criterion state and metrics
-        metadata = {
-            'model': {
-                'class': self.model.__class__.__name__,
-                'dict': self.model.state_dict()
-            },
-            'optimizer': {
-                'class': self.optimizer.__class__.__name__,
-                'dict': self.optimizer.state_dict()
-            },
-            'criterion': {
-                'class': self.criterion.__class__.__name__,
-                'dict': self.criterion.state_dict()
-            },
-            'device': self.device,
-            'metrics': self.metrics
-        }
-        torch.save(metadata, path)
-
-    @classmethod
-    def load(cls, path):
-        # Load saved model state and recreate runner
-        metadata = torch.load(path)     
-        model = metadata['model']['class'].load_state_dict(metadata['model']['dict'])
-        optimizer = metadata['optimizer']['class'].load_state_dict(metadata['optimizer']['dict'])
-        criterion = metadata['criterion']['class'].load_state_dict(metadata['criterion']['dict'])
-        runner = cls(model, optimizer, criterion, metadata['device'])
-        return runner
+    def save(self, path): 
+        self.model.save(path)
 
     def plot(self, val_loader = None, save_path=None):
         """Plot training and validation metrics"""
@@ -173,7 +146,6 @@ class Runner:
 
         if save_path:
             plt.savefig(save_path)
-            plt.close()
         else:
             plt.show()
         
